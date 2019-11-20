@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import org.springframework.samples.petclinic.hospedagem.HospedagemRepository;
 import org.springframework.samples.petclinic.visit.VisitRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,11 +43,12 @@ class OwnerController {
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private final OwnerRepository owners;
     private VisitRepository visits;
+    private HospedagemRepository hosps;
 
-
-    public OwnerController(OwnerRepository clinicService, VisitRepository visits) {
+    public OwnerController(OwnerRepository clinicService, VisitRepository visits, HospedagemRepository hosps) {
         this.owners = clinicService;
         this.visits = visits;
+        this.hosps = hosps;
     }
 
     @InitBinder
@@ -132,6 +134,7 @@ class OwnerController {
         Owner owner = this.owners.findById(ownerId);
         for (Pet pet : owner.getPets()) {
             pet.setVisitsInternal(visits.findByPetId(pet.getId()));
+            pet.setVisitsInternalHosp(hosps.findByPetId(pet.getId()));
         }
         mav.addObject(owner);
         return mav;

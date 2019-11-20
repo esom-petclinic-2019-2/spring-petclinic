@@ -48,6 +48,8 @@
             <dt>Birth Date</dt>
             <dd
               th:text="${#temporals.format(pet.birthDate, 'yyyy-MM-dd')}" /></dd>
+                <dt>Cor</dt>
+            <dd th:text="${pet.cor}" /></dd>
             <dt>Type</dt>
             <dd th:text="${pet.type}" /></dd>
           </dl>
@@ -58,13 +60,15 @@
               <tr>
                 <th>Visit Date</th>
                 <th>Description</th>
+                
               </tr>
             </thead>
             <tr th:each="visit : ${pet.visits}">
               <td th:text="${#temporals.format(visit.date, 'yyyy-MM-dd')}"></td>
               <td th:text="${visit?.description}"></td>
             </tr>
-            <tr>
+            
+              <tr>
               <td><a
                 th:href="@{{ownerId}/pets/{petId}/edit(ownerId=${owner.id},petId=${pet.id})}">Edit
                   Pet</a></td>
@@ -72,12 +76,26 @@
                 th:href="@{{ownerId}/pets/{petId}/visits/new(ownerId=${owner.id},petId=${pet.id})}">Add
                   Visit</a></td>
             </tr>
+            	
+  		<tr th:each="hosp: ${pet.hosps}">
+  		    <th>Diarias</th>
+  			<td th:text="${hosp.diarias}"></td>
+  			<th>Data saida</th>
+  			<td th:text="${#temporals.format(hosp.date_saida, 'yyyy-MM-dd')}"></td>
+  	</tr>
+  	<tr>
+  		<td><a
+              th:href="@{{ownerId}/pets/{petId}/hosps/new(ownerId=${owner.id},petId=${pet.id})}">Add
+              hospedagem</a></td>
+  	</tr>
+  
           </table>
         </td>
       </tr>
   
     </table>
-  
+   
+  	
   </body>
 
 </html>
