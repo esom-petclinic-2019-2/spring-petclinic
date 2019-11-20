@@ -24,16 +24,20 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.samples.petclinic.hospedagem.Hospedagem;
 import org.springframework.samples.petclinic.model.NamedEntity;
 import org.springframework.samples.petclinic.visit.Visit;
 
@@ -62,7 +66,26 @@ public class Pet extends NamedEntity {
 
     @Transient
     private Set<Visit> visits = new LinkedHashSet<>();
+    
+    @Transient
+    private Set<Hospedagem> hosps = new LinkedHashSet<>();
+    
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "petId", fetch = FetchType.EAGER)
+//  	private List<Hospedagem> hosps = new ArrayList<>();
+    
+public void setVisits(Set<Visit> visits) {
+		this.visits = visits;
+	}
 
+	public void setHosps(Set<Hospedagem> hosps) {
+		this.hosps = hosps;
+	}
+
+	//    @Column(name="peso")
+//    private double peso;
+    @Column(name="cor")
+    private String cor;
+    
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
@@ -93,9 +116,20 @@ public class Pet extends NamedEntity {
         }
         return this.visits;
     }
-
+    
+    protected Set<Hospedagem> getHopsInternal() {
+        if (this.hosps == null) {
+            this.hosps = new HashSet<>();
+        }
+        return this.hosps;
+    }
+    
     protected void setVisitsInternal(Collection<Visit> visits) {
         this.visits = new LinkedHashSet<>(visits);
+    }
+    
+    protected void setVisitsInternalHosp(Collection<Hospedagem> hosps) {
+        this.hosps = new LinkedHashSet<>(hosps);
     }
 
     public List<Visit> getVisits() {
@@ -104,10 +138,30 @@ public class Pet extends NamedEntity {
                 new MutableSortDefinition("date", false, false));
         return Collections.unmodifiableList(sortedVisits);
     }
+    
+    public List<Hospedagem> getHosps() {
+        List<Hospedagem> sortedHosps = new ArrayList<>(getHopsInternal());
+        PropertyComparator.sort(sortedHosps,
+                new MutableSortDefinition("date", false, false));
+        return Collections.unmodifiableList(sortedHosps);
+    }
 
     public void addVisit(Visit visit) {
         getVisitsInternal().add(visit);
         visit.setPetId(this.getId());
     }
+    
+    public void addHosp(Hospedagem hosp) {
+        getHopsInternal().add(hosp);
+        hosp.setPetId(this.getId());
+    }
+
+	public String getCor() {
+		return cor;
+	}
+
+	public void setCor(String cor) {
+		this.cor = cor;
+	}
 
 }
