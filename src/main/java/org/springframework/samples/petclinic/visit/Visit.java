@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.visit;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,9 +40,16 @@ public class Visit extends BaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
+    @Column(name = "visit_hour")
+    @DateTimeFormat(pattern = "HH:mm:ss")
+    private LocalTime hour;
+
     @NotEmpty
     @Column(name = "description")
     private String description;
+
+    @Column(name = "price")
+    private Double price;
 
     @Column(name = "pet_id")
     private Integer petId;
@@ -51,6 +59,7 @@ public class Visit extends BaseEntity {
      */
     public Visit() {
         this.date = LocalDate.now();
+        this.hour = LocalTime.now();
     }
 
     public LocalDate getDate() {
@@ -59,6 +68,14 @@ public class Visit extends BaseEntity {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public LocalTime getHour() {
+        return this.hour;
+    }
+
+    public void setHour(LocalTime hour) {
+        this.hour = hour;
     }
 
     public String getDescription() {
@@ -75,6 +92,14 @@ public class Visit extends BaseEntity {
 
     public void setPetId(Integer petId) {
         this.petId = petId;
+    }
+
+    public Double getPrice() {
+        return this.price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
 }
